@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.urls import path
 
-# Create your views here.
+from .views import homePageView, addView
+
+urlpatterns = [
+    path('', homePageView, name='home'),
+    path('add/', addView, name='add'),
+]
