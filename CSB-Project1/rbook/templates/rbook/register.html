@@ -1,0 +1,10 @@
+{% extends 'rbook/base.html' %}
+
+{% block content %}
+<h2>Register New Account</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Register</button>
+</form>
+{% endblock %}
