@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import Recipe
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -17,3 +18,12 @@ class RegisterForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class RecipeForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['rname', 'category', 'portions', 'ingredients', 'guidance', 'secret']
+        widgets = {
+            'ingredients': forms.Textarea(attrs={'rows': 4}),
+            'guidance': forms.Textarea(attrs={'rows': 4}),
+        }
