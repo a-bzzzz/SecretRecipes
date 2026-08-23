@@ -1,0 +1,15 @@
+{% extends 'rbook/base.html' %}
+
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+
+<ul>
+    {% for recipe in recipes %}
+        <li><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.rname }}</a> (by {{ recipe.owner.username }})</li>
+    {% empty %}
+        <li>No recipes matched your search.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'index' %}">&laquo; Back to index</a>
+{% endblock %}
