@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db import connection
 from .models import Recipe
 from django.contrib.auth import login
-from .forms import RegisterForm
+from django.contrib.auth.decorators import login_required
+from .forms import RegisterForm, RecipeForm
 
 def index(request):
     public_recipes = Recipe.objects.filter(secret=False)
@@ -55,3 +56,25 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'rbook/register.html', {'form': form})
+
+# FLAW 4: A02:2025 - Cryptographic Failures / Sensitive Data Exposure
+# VULNERABLE VERSION: When creating a secret recipe, the application prints/writes 
+# the recipe's "secrets" (e.g. ingredients) directly to the server console/log in plain text,
+# and stores them in the database without any protection/encryption.
+@login_required
+def add_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.owner = request.user
+            recipe.save()
+            
+            # VULNERABILITY (Flaw 4): Leaking sensitive information to the server log
+            if recipe.secret:
+                print(f"[SECURITY WARNING LOG] Secret recipe created by {request.user.username}! Secret details: {recipe.ingredients}")
+
+            return redirect('index')
+    else:
+        form = RecipeForm()
+    return render(request, 'rbook/add_recipe.html', {'form': form})
