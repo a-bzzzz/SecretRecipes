@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db import connection
 from .models import Recipe
+from django.contrib.auth import login
+from .forms import RegisterForm
 
 def index(request):
     public_recipes = Recipe.objects.filter(secret=False)
@@ -42,3 +44,14 @@ def search(request):
         'query': query,
         'recipes': recipes
     })
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_dict() if hasattr(form, 'is_dict') else form.is_valid():
+            user = form.save()
+            login(request, user)  # Login user at the same time
+            return redirect('index')
+    else:
+        form = RegisterForm()
+    return render(request, 'rbook/register.html', {'form': form})
