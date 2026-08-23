@@ -8,6 +8,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     
     # Django login & logout
-    path('login/', auth_views.LoginView.as_template_name('registration/login.html'), name='login'), # TODO
+    path('login/', auth_views.LoginView.as_view(template_name='rbook/login.html'), name='login'), # TODO
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
