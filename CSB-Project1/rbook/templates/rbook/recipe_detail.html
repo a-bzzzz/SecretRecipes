@@ -1,0 +1,16 @@
+{% extends 'rbook/base.html' %}
+
+{% block content %}
+<h2>{{ recipe.rname }} {% if recipe.secret %}(SECRET){% endif %}</h2>
+<p><strong>Category:</strong> {{ recipe.get_category_display }}</p>
+<p><strong>Portions:</strong> {{ recipe.portions }}</p>
+<p><strong>Owner:</strong> {{ recipe.owner.username }}</p>
+
+<h3>Ingredients</h3>
+<pre>{{ recipe.ingredients }}</pre>
+
+<h3>Instructions</h3>
+<pre>{{ recipe.guidance }}</pre>
+
+<a href="{% url 'index' %}">&laquo; Back to index</a>
+{% endblock %}
