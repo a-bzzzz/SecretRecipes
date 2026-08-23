@@ -1,51 +1,29 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>Secret Recipes</title>
-    </head>
+{% extends 'rbook/base.html' %}
 
+{% block content %}
+<h2>Recipe Search</h2>
+<form action="{% url 'search' %}" method="GET">
+    <input type="text" name="query" placeholder="Search recipes...">
+    <button type="submit">Search</button>
+</form>
 
-    <body>
-		<h1>Your Secret Recipe Book</h1>
+<h2>Public Recipes</h2>
+<ul>
+    {% for recipe in public_recipes %}
+        <li><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.rname }}</a> (by {{ recipe.owner.username }})</li>
+    {% empty %}
+        <li>No public recipes found.</li>
+    {% endfor %}
+</ul>
 
-        <table>
-		<tr>
-		<th style="text-align:left">Username: <td>{{user.username}} 
-		</table>
-
-
-        <form action='logout/' method="POST">
-			{% csrf_token %}
-            <input type="submit" value="Logout"/>
-        </form>
-		
-        <h2>Your Recipes</h2>
-
-		<ul>
-		{% for r in recipes %}
-
-		<li>{{r.rname}}
-		</li>
-
-		{% endfor %}
-		</ul>
-
-
-        <h2>Create a recipe</h2>
-
-        <form action='add/' method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="id" value="{{recipes.id}}" />
-			Username: <input type="text" name="rname"/><br/>
-            Category: <input type="text" name="category"/><br/>
-            Secret: <input type="boolean" name="secret"/><br/>
-            Portions: <input type="text" name="portions"/><br/>
-            Ingredients: <input type="text" name="ingredients"/><br/>
-            Instructions: <input type="text" name="guidance"/><br/>
-            <input type="submit" value="Add"/>
-        </form>
-    </body>
-
-
-    </body>
-</html>
+{% if user.is_authenticated %}
+    <h2>My Secret Recipes</h2>
+    <ul>
+        {% for recipe in my_secret_recipes %}
+            <li><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.rname }}</a></li>
+        {% empty %}
+            <li>You have no secret recipes.</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
