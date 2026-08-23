@@ -5,7 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'secret_recipes.settings')
 django.setup()
 
 from django.contrib.auth.models import User
-from recipes.models import Recipe
+from rbook.models import Recipe
 
 # Create first users
 if not User.objects.filter(username='admin').exists():
