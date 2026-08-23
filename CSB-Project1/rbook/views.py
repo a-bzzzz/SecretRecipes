@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_response, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db import connection
 from .models import Recipe
 
