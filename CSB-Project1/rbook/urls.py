@@ -1,8 +1,13 @@
 from django.urls import path
-
-from .views import homePageView, addView
+from django.contrib.auth import views as auth_views
+from . import views
 
 urlpatterns = [
-    path('', homePageView, name='home'),
-    path('add/', addView, name='add'),
+    path('', views.index, name='index'),
+    path('recipe/<int:recipe_id>/', views.recipe_detail, name='recipe_detail'),
+    path('search/', views.search, name='search'),
+    
+    # Django login & logout
+    path('login/', auth_views.LoginView.as_template_name('registration/login.html'), name='login'), # TODO
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
