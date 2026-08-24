@@ -129,3 +129,13 @@ MAILERS = {
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+# FLAW 5: A02:2025 Security Misconfiguration 
+# (CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag)
+# VULNERABILITY 5: Sensitive cookies are configured without the HttpOnly flag, allowing client-side scripts to access them.
+SESSION_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = False
+
+# FIX 5: Secure session and CSRF cookies against client-side script access
+# SESSION_COOKIE_HTTPONLY = True
+# CSRF_COOKIE_HTTPONLY = True
