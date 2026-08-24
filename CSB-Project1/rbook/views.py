@@ -17,29 +17,31 @@ def index(request):
         'my_secret_recipes': my_secret_recipes
     })
 
-# FLAW 1: A01:2025 - Broken Access Control (IDOR)
-# VULNERABLE VERSION: Retrieves the recipe directly by ID without checking 
-# whether the recipe is secret and whether it belongs to the user making the request.
+# FLAW 1: A01:2025 - Broken Access Control (IDOR / CWE-639)
 def recipe_detail(request, recipe_id):
+    
+    # VULNERABILITY 1: Retrieves the recipe directly by ID without checking 
+    # whether the recipe is secret and whether it belongs to the user making the request.
     recipe = Recipe.objects.get(id=recipe_id)
-    # FIX:
+    
+    # FIX 1: Restrict secret recipes to owner only.
+    # recipe = get_object_or_404(Recipe, id=recipe_id)
     # if recipe.secret and recipe.owner != request.user:
     #     raise PermissionDenied("You do not have permission to view this secret recipe.")
     
     return render(request, 'rbook/recipe_detail.html', {'recipe': recipe})
 
-# FLAW 2: A05:2025 - Injection (SQL Injection)
-# VULNERABLE VERSION: Using a raw SQL query with string formatting (f-string) 
-# instead of an ORM-protected query.
+# FLAW 2: A05:2025 - Injection (SQL Injection / CWE-89)
 def search(request):
     query = request.GET.get('query', '')
     
-    # Vulnerable raw SQL query:
+    # VULNERABILITY 2: Using a raw SQL query with string formatting (f-string) 
+    # instead of an ORM-protected query.
     raw_query = f"SELECT * FROM rbook_recipe WHERE rname LIKE '%{query}%'"
     recipes = Recipe.objects.raw(raw_query)
     
-    # FIX:
-    # recipes = Recipe.objects.filter(rname__icontains=query)
+    # FIX 2: Use Django's ORM parametrized query.
+    # recipes = Recipe.objects.filter(rname__icontains=query, secret=False)
 
     return render(request, 'rbook/search_results.html', {
         'query': query,
@@ -57,12 +59,11 @@ def register(request):
         form = RegisterForm()
     return render(request, 'rbook/register.html', {'form': form})
 
-# FLAW 4: A02:2025 - Cryptographic Failures / Sensitive Data Exposure
-# VULNERABLE VERSION: When creating a secret recipe, the application prints/writes 
-# the recipe's "secrets" (e.g. ingredients) directly to the server console/log in plain text,
-# and stores them in the database without any protection/encryption.
+# FLAW 4: A09:2025 Security Logging and Alerting Failures 
+# (CWE-532, Insertion of Sensitive Information into Log File)
 @login_required
 def add_recipe(request):
+    
     if request.method == 'POST':
         form = RecipeForm(request.POST)
         if form.is_valid():
@@ -70,9 +71,16 @@ def add_recipe(request):
             recipe.owner = request.user
             recipe.save()
             
-            # VULNERABILITY (Flaw 4): Leaking sensitive information to the server log
+            # VULNERABILITY 4: Leaking sensitive information to the server log.
+            # When creating a secret recipe, the application prints/writes 
+            # the recipe's "secrets" (e.g. ingredients) directly to the server console/log in plain text,
+            # and stores them in the database without any protection/encryption.
             if recipe.secret:
                 print(f"[SECURITY WARNING LOG] Secret recipe created by {request.user.username}! Secret details: {recipe.ingredients}")
+        
+            # FIX 4: Remove sensitive data logging or mask sensitive values.
+            # if recipe.secret:
+            #     print(f"[SECURITY WARNING LOG] Secret recipe ID {recipe.id} created by user {request.user.id}") 
 
             return redirect('index')
     else:
