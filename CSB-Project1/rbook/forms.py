@@ -10,8 +10,7 @@ class RegisterForm(forms.ModelForm):
         model = User
         fields = ['username', 'password']
 
-    # FLAW 3: A07:2025 - Authentication Failures (CWE-521: Weak Password Requirements)
-    
+    # FLAW 3: A07:2025 - Authentication Failures (CWE-521: Weak Password Requirements)    
     def save(self, commit=True):
         user = super().save(commit=False)
         raw_password = self.cleaned_data["password"]
