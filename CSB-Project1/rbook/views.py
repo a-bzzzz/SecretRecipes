@@ -17,7 +17,8 @@ def index(request):
         'my_secret_recipes': my_secret_recipes
     })
 
-# FLAW 1: A01:2025 - Broken Access Control (IDOR / CWE-639)
+# FLAW 1: A01:2025 - Broken Access Control 
+# (CWE-639: Authorization Bypass Through User-Controlled Key / IDOR)
 def recipe_detail(request, recipe_id):
     
     # VULNERABILITY 1: Retrieves the recipe directly by ID without checking 
@@ -31,7 +32,8 @@ def recipe_detail(request, recipe_id):
     
     return render(request, 'rbook/recipe_detail.html', {'recipe': recipe})
 
-# FLAW 2: A05:2025 - Injection (SQL Injection / CWE-89)
+# FLAW 2: A05:2025 - Injection 
+# (CWE-89: SQL Injection)
 def search(request):
     query = request.GET.get('query', '')
     
@@ -60,7 +62,7 @@ def register(request):
     return render(request, 'rbook/register.html', {'form': form})
 
 # FLAW 4: A09:2025 Security Logging and Alerting Failures 
-# (CWE-532, Insertion of Sensitive Information into Log File)
+# (CWE-532: Insertion of Sensitive Information into Log File)
 @login_required
 def add_recipe(request):
     
