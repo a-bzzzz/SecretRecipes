@@ -10,9 +10,7 @@
 <p>{{ recipe.ingredients|linebreaks }}</p>
 
 <h3>Instructions</h3>
-<!-- FLAW 5: A03 Cross-Site Scripting (XSS) -->
-<!-- VULNERABLE VERSION: |safe overrides Django's automatic HTML escaping -->
-<p>{{ recipe.guidance|safe|linebreaks }}</p>
+<p>{{ recipe.guidance|linebreaks }}</p>
 
 <a href="{% url 'index' %}">&laquo; Back to Home Page</a>
 {% endblock %}
