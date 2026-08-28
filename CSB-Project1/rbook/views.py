@@ -23,11 +23,11 @@ def recipe_detail(request, recipe_id):
     
     # VULNERABILITY 1: Retrieves the recipe directly by ID without checking 
     # whether the recipe is secret and whether it belongs to the user making the request.
-    recipe = Recipe.objects.get(id=recipe_id)
+    # recipe = Recipe.objects.get(id=recipe_id)
     
     # FIX 1: Restrict secret recipes to owner only.
-    # recipe = get_object_or_404(Recipe, id=recipe_id)
-    # if recipe.secret and recipe.owner != request.user:
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    if recipe.secret and recipe.owner != request.user:
     #     raise PermissionDenied("You do not have permission to view this secret recipe.")
     
     return render(request, 'rbook/recipe_detail.html', {'recipe': recipe})
