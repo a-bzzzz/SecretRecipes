@@ -28,7 +28,7 @@ def recipe_detail(request, recipe_id):
     # FIX 1: Restrict secret recipes to owner only.
     recipe = get_object_or_404(Recipe, id=recipe_id)
     if recipe.secret and recipe.owner != request.user:
-    #     raise PermissionDenied("You do not have permission to view this secret recipe.")
+        raise PermissionDenied("You do not have permission to view this secret recipe.")
     
     return render(request, 'rbook/recipe_detail.html', {'recipe': recipe})
 
