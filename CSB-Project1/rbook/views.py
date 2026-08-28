@@ -3,6 +3,7 @@ from django.db import connection
 from .models import Recipe
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from .forms import RegisterForm, RecipeForm
 
 def index(request):
@@ -23,7 +24,8 @@ def recipe_detail(request, recipe_id):
     
     # VULNERABILITY 1: Retrieves the recipe directly by ID without checking 
     # whether the recipe is secret and whether it belongs to the user making the request.
-    recipe = Recipe.objects.get(id=recipe_id)
+    # recipe = Recipe.objects.get(id=recipe_id) # Does not handle missing recipe
+    recipe = get_object_or_404(Recipe, id=recipe_id) # Handles missing recipe with 404, but not user permission
     
     # FIX 1: Restrict secret recipes to owner only.
     # recipe = get_object_or_404(Recipe, id=recipe_id)
