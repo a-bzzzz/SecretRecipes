@@ -41,11 +41,11 @@ def search(request):
     
     # VULNERABILITY 2: Using a raw SQL query with string formatting (f-string) 
     # instead of an ORM-protected query.
-    raw_query = f"SELECT * FROM rbook_recipe WHERE rname LIKE '%{query}%'"
-    recipes = Recipe.objects.raw(raw_query)
+    # raw_query = f"SELECT * FROM rbook_recipe WHERE rname LIKE '%{query}%'"
+    # recipes = Recipe.objects.raw(raw_query)
     
     # FIX 2: Use Django's ORM parametrized query.
-    # recipes = Recipe.objects.filter(rname__icontains=query, secret=False)
+    recipes = Recipe.objects.filter(rname__icontains=query, secret=False)
 
     return render(request, 'rbook/search_results.html', {
         'query': query,
