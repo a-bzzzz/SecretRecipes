@@ -133,14 +133,14 @@ LOGOUT_REDIRECT_URL = 'index'
 # FLAW 5: A02:2025 Security Misconfiguration 
 # (CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag)
 # VULNERABILITY 5: Sensitive cookies are configured without the HttpOnly flag, allowing client-side scripts to access them.
-# SESSION_COOKIE_HTTPONLY = False     # or this line is missing (False is default value)
-# SESSION_COOKIE_SAMESITE = 'Lax'
-# CSRF_COOKIE_HTTPONLY = False        # or this line is missing (False is default value)
+SESSION_COOKIE_HTTPONLY = False     # or this line is missing (False is default value)
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = False        # or this line is missing (False is default value)
 
 # FIX 5: Secure session and CSRF cookies against client-side script access
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Strict'
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SAMESITE = 'Strict'
-CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_SAMESITE = 'Strict'
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_HTTPONLY = True
+# CSRF_COOKIE_SAMESITE = 'Strict'
+# CSRF_COOKIE_SECURE = True
