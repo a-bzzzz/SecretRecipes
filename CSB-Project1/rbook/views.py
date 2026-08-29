@@ -75,16 +75,13 @@ def add_recipe(request):
             recipe.owner = request.user
             recipe.save()
             
-            # VULNERABILITY 4: Leaking sensitive information to the server log.
-            # When creating a secret recipe, the application prints/writes 
-            # the recipe's "secrets" (e.g. ingredients) directly to the server console/log in plain text,
-            # and stores them in the database without any protection/encryption.
+            # VULNERABILITY 4: Logs sensitive content (recipe ingredients/details) directly to logs.
             if recipe.secret:
-                print(f"[SECURITY WARNING LOG] Secret recipe created by {request.user.username}! Secret details: {recipe.ingredients}")
+                print(f"[LOG] Secret recipe ID {recipe.id}: '{recipe.rname}' created by {request.user.username}! \nSecret details: {recipe.ingredients}")
         
-            # FIX 4: Remove sensitive data logging or mask sensitive values.
+            # FIX 4: Log only safe metadata for security auditing.
             # if recipe.secret:
-            #     print(f"[SECURITY WARNING LOG] Secret recipe ID {recipe.id} created by user {request.user.id}") 
+            #     print(f"[SECURITY AUDIT] Secret recipe ID {recipe.id}: '{recipe.rname}' created by {request.user.id}! \nSecret details: {recipe.ingredients}") 
 
             return redirect('index')
     else:
