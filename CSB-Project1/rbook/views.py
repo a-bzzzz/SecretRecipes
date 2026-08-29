@@ -76,12 +76,12 @@ def add_recipe(request):
             recipe.save()
             
             # VULNERABILITY 4: Logs sensitive content (recipe ingredients/details) directly to logs.
-            # if recipe.secret:
-            #     print(f"[LOG] Secret recipe ID {recipe.id}: '{recipe.rname}' created by {request.user.username}! \nSecret details: {recipe.ingredients}")
+            if recipe.secret:
+                print(f"[LOG] Secret recipe ID {recipe.id}: '{recipe.rname}' created by {request.user.username}! \nSecret details: {recipe.ingredients}")
         
             # FIX 4: Log only safe metadata for security auditing.
-            if recipe.secret:                
-                print(f"[SECURITY AUDIT] Secret recipe ID {recipe.id} created by user {request.user.id}")
+            # if recipe.secret:                
+            #     print(f"[SECURITY AUDIT] Secret recipe ID {recipe.id} created by user {request.user.id}")
             
             return redirect('index')
     else:
