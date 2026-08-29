@@ -80,9 +80,9 @@ def add_recipe(request):
             #     print(f"[LOG] Secret recipe ID {recipe.id}: '{recipe.rname}' created by {request.user.username}! \nSecret details: {recipe.ingredients}")
         
             # FIX 4: Log only safe metadata for security auditing.
-            if recipe.secret:
-                print(f"[SECURITY AUDIT] Secret recipe ID {recipe.id}: '{recipe.rname}' created by {request.user.id}! \nSecret details: {recipe.ingredients}") 
-
+            if recipe.secret:                
+                print(f"[SECURITY AUDIT] Secret recipe ID {recipe.id} created by user {request.user.id}")
+            
             return redirect('index')
     else:
         form = RecipeForm()
