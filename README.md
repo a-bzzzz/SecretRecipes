@@ -11,8 +11,10 @@ The project deliverable, the project report, will be/is submitted to the course 
 
 ### Database set-up
 
-`python3 manage.py makemigrations`
+```
+python3 manage.py makemigrations`
 
-`python3 manage.py migrate`
+python3 manage.py migrate`
 
-`python3 create_first_data.py`
+python3 create_first_data.py
+```
